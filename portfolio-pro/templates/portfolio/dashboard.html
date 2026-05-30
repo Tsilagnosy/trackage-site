@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+
+<section class="py-10">
+
+    <h1 class="text-5xl font-bold mb-10">
+        Dashboard Analytics
+    </h1>
+
+    <div class="grid md:grid-cols-3 gap-6 mb-10">
+
+        <div class="bg-gray-900 p-6 rounded-2xl">
+            <h2 class="text-gray-400 mb-2">
+                Visiteurs Totaux
+            </h2>
+
+            <p class="text-4xl font-bold">
+                {{ total_visitors }}
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="bg-gray-900 p-6 rounded-2xl mb-10">
+
+        <h2 class="text-2xl font-bold mb-6">
+            Trafic 7 derniers jours
+        </h2>
+
+        <canvas id="trafficChart"></canvas>
+
+    </div>
+
+
+    <div class="bg-gray-900 p-6 rounded-2xl">
+
+        <h2 class="text-2xl font-bold mb-6">
+            Publications populaires
+        </h2>
+
+        <div class="space-y-4">
+
+            {% for publication in popular_publications %}
+
+            <div class="flex justify-between border-b border-gray-700 pb-3">
+
+                <span>
+                    {{ publication.title }}
+                </span>
+
+                <span>
+                    👁 {{ publication.views }}
+                </span>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const ctx = document.getElementById('trafficChart');
+
+new Chart(ctx, {
+    type: 'line',
+
+    data: {
+        labels: [
+            {% for item in visitors_per_day %}
+                "{{ item.day }}",
+            {% endfor %}
+        ],
+
+        datasets: [{
+            label: 'Visiteurs',
+
+            data: [
+                {% for item in visitors_per_day %}
+                    {{ item.count }},
+                {% endfor %}
+            ],
+
+            tension: 0.4
+        }]
+    }
+});
+
+</script>
+
+{% endblock %}
+	
+	
+	
+	
+	
+	
+	
+	
+	

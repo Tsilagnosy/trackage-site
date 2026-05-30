@@ -25,8 +25,14 @@ SECRET_KEY = "django-insecure-!y5vcw7x6f$yo5b7g(#61(%x4bgfvhhx^#6@xk=!-i=xwre*v6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8000",
+    "https://localhost:8000",
+    "https://*app.github.dev",
+    "https://*.githubpreview.dev",
+]
 
 # Application definition
 
@@ -50,6 +56,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "portfolio.middleware.VisitorAnalyticsMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -127,10 +134,7 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')	
-	
-	
-	
-	
+LOGIN_URL = '/admin/login/'
 	
 	
 	
