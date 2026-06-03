@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     "portfolio",
     "django_extensions",
     "django_user_agents",
+    "tailwind",
+    "theme",
 ]
 
 MIDDLEWARE = [
@@ -142,5 +144,7 @@ CLOUDINARY_STORAGE = {
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-	
-	
+TAILWIND_APP_NAME = 'theme'
+INTERNAL_IPS = [
+    "127.0.0.1",
+]	

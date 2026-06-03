@@ -8,6 +8,7 @@ dj-database-url==3.1.2
 Django==6.0.5
 django-cloudinary-storage==0.3.0
 django-extensions==4.1
+django-tailwind==4.4.2
 django-user-agents==0.4.0
 fonttools==4.63.0
 gunicorn==26.0.0
@@ -19,6 +20,7 @@ packaging==26.2
 pillow==12.2.0
 psycopg2-binary==2.9.12
 pyparsing==3.3.2
+pytailwindcss==0.3.0
 python-dateutil==2.9.0.post0
 python-dotenv==1.2.2
 requests==2.34.2

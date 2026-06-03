@@ -1,540 +1,284 @@
 {% extends 'base.html' %}
-
-{% block title %}
-CV - Julien Tsilagnosy Lahiniriko
-{% endblock %}
-
+{% load static %}
 {% block content %}
 
-<style>
+<section class="max-w-6xl mx-auto">
 
-  *, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+    <!-- Header -->
 
-  .cv-wrapper {
-    background: #d4dde8;
-    min-height: 100vh;
-    padding: 40px 20px;
-  }
+    <div class="text-center mb-20">
 
-  .page {
-    max-width: 950px;
-    margin: 0 auto;
-    background: #ffffff;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-    overflow: hidden;
-    border-radius: 20px;
-  }
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-300 text-sm mb-8">
 
-  /* HEADER */
+            Curriculum Vitae
 
-  .header {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 30px;
-    padding: 40px 50px;
-    background: linear-gradient(135deg, #0f172a, #1e3a5f);
-    color: white;
-  }
+        </div>
 
-  .avatar {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 4px solid rgba(255,255,255,0.2);
-    flex-shrink: 0;
-  }
+        <h1 class="text-5xl md:text-7xl font-bold">
 
-  .avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+            Julien Tsila
 
-  .header-content h1 {
-    font-size: 42px;
-    font-weight: 800;
-    margin-bottom: 10px;
-  }
+        </h1>
 
-  .header-content p {
-    font-size: 20px;
-    opacity: 0.9;
-  }
+        <p class="text-gray-400 text-xl mt-6 max-w-3xl mx-auto leading-relaxed">
 
-  /* CONTACT */
+            Développeur Fullstack passionné par la création
+            d’applications web modernes, performantes
+            et professionnelles.
 
-  .contact-bar {
-    background: #f8fafc;
-    padding: 18px 50px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    border-bottom: 1px solid #dbe4ef;
-  }
-
-  .contact-item {
-    color: #334155;
-    font-size: 14px;
-    font-weight: 500;
-  }
-
-  /* BODY */
-
-  .body {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-  }
-
-  .left {
-    padding: 40px 50px;
-    border-right: 1px solid #e2e8f0;
-  }
-
-  .right {
-    padding: 40px 35px;
-    background: #f8fafc;
-  }
-
-  .section {
-    margin-bottom: 40px;
-  }
-
-  .section-title {
-    font-size: 15px;
-    font-weight: 800;
-    color: #0f172a;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 20px;
-    position: relative;
-  }
-
-  .section-title::after {
-    content: """";
-    display: block;
-    width: 60px;
-    height: 3px;
-    background: #2563eb;
-    margin-top: 8px;
-    border-radius: 10px;
-  }
-
-  .description {
-    color: #475569;
-    line-height: 1.8;
-    font-size: 15px;
-  }
-
-  /* EXPERIENCE */
-
-  .experience {
-    margin-bottom: 28px;
-  }
-
-  .experience h3 {
-    font-size: 18px;
-    color: #0f172a;
-    margin-bottom: 5px;
-  }
-
-  .experience .company {
-    color: #2563eb;
-    font-weight: 600;
-    margin-bottom: 10px;
-    font-size: 14px;
-  }
-
-  .experience ul {
-    padding-left: 18px;
-  }
-
-  .experience li {
-    margin-bottom: 8px;
-    color: #475569;
-    line-height: 1.7;
-    font-size: 14px;
-  }
-
-  /* SKILLS */
-
-  .skills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .skill {
-    background: #dbeafe;
-    color: #1e3a8a;
-    padding: 8px 14px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 600;
-  }
-
-  /* RIGHT COLUMN */
-
-  .side-list {
-    list-style: none;
-  }
-
-  .side-list li {
-    margin-bottom: 12px;
-    color: #475569;
-    font-size: 14px;
-    line-height: 1.6;
-  }
-
-  /* RESPONSIVE */
-
-  @media(max-width: 768px){
-
-    .body {
-      grid-template-columns: 1fr;
-    }
-
-    .left {
-      border-right: none;
-    }
-
-    .header {
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 30px;
-    }
-
-    .contact-bar {
-      padding: 18px 30px;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .left,
-    .right {
-      padding: 30px;
-    }
-
-    .header-content h1 {
-      font-size: 32px;
-    }
-
-  }
-
-</style>
-
-<div class="cv-wrapper">
-
-  <div class="page">
-
-    <!-- HEADER -->
-
-    <div class="header">
-
-      <div class="avatar">
-        <img src="/media/profil/1700663426000.jpg" alt="Photo profil">
-      </div>
-
-      <div class="header-content">
-        <h1>Julien Tsilagnosy Lahiniriko</h1>
-
-        <p>
-          Étudiant en Médecine • Développeur Web • Gestionnaire de Données
         </p>
-      </div>
 
-    </div>
+        <!-- Buttons -->
 
-    <!-- CONTACT -->
+        <div class="flex flex-wrap items-center justify-center gap-4 mt-10">
 
-    <div class="contact-bar">
+            <a href="#"
+               class="px-8 py-4 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-black font-semibold transition duration-300">
 
-      <div class="contact-item">
-        📞 +261 34 61 178 93
-      </div>
+                Télécharger PDF
 
-      <div class="contact-item">
-        ✉️ julientsila@gmail.com
-      </div>
+            </a>
 
-      <div class="contact-item">
-        📍 Mahajanga, Madagascar
-      </div>
+            <a href="{% url 'contact' %}"
+               class="px-8 py-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition duration-300">
 
-      <div class="contact-item">
-        💬 Telegram : t.me/mandeepsangar67
-      </div>
+                Me contacter
 
-    </div>
-
-    <!-- BODY -->
-
-    <div class="body">
-
-      <!-- LEFT -->
-
-      <div class="left">
-
-        <!-- PROFIL -->
-
-        <div class="section">
-
-          <div class="section-title">
-            Profil
-          </div>
-
-          <div class="description">
-            Étudiant en médecine humaine et passionné par les technologies numériques,
-            je développe également des compétences avancées en développement web,
-            gestion de bases de données et automatisation de systèmes.
-            Je m'intéresse particulièrement à la création de solutions numériques
-            utiles dans les domaines de la santé, de l'éducation et de la gestion.
-          </div>
+            </a>
 
         </div>
 
-        <!-- EXPERIENCE -->
+    </div>
 
-        <div class="section">
+    <!-- Main Grid -->
 
-          <div class="section-title">
-            Expériences
-          </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
-          <div class="experience">
+        <!-- LEFT -->
 
-            <h3>
-              Responsable Gestion des Données
-            </h3>
+        <div class="space-y-10">
 
-            <div class="company">
-              Association Jeunes Ambitieux • 2023 - Présent
+            <!-- Profile -->
+
+            <div class="rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl p-8">
+
+                <div class="w-32 h-32 mx-auto rounded-3xl overflow-hidden border border-white/10">
+                    <img src="{% static 'images/profile.jpeg' %}"
+                         alt="Julien Tsila"
+                         class="w-full h-full object-cover">
+                    </a>
+                </div>
+                <div class="text-center mt-6">
+
+                    <h2 class="text-2xl font-semibold">
+
+                        Développeur Fullstack
+
+                    </h2>
+
+                    <p class="text-gray-400 mt-3">
+
+                        Madagascar
+
+                    </p>
+
+                </div>
+
             </div>
 
-            <ul>
-              <li>
-                Gestion et organisation des bases de données des membres.
-              </li>
+            <!-- Skills -->
 
-              <li>
-                Mise en place d’outils de suivi et tableaux de bord analytiques.
-              </li>
+            <div class="rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl p-8">
 
-              <li>
-                Participation à l’organisation et au pilotage des projets internes.
-              </li>
-            </ul>
+                <h3 class="text-2xl font-semibold mb-8">
 
-          </div>
+                    Compétences
 
+                </h3>
 
-          <div class="experience">
+                <div class="space-y-6">
 
-            <h3>
-              Développeur Web Junior
-            </h3>
+                    <div>
 
-            <div class="company">
-              Projets Personnels • 2024 - Présent
+                        <div class="flex justify-between mb-2">
+
+                            <span>Python / Django</span>
+                            <span>90%</span>
+
+                        </div>
+
+                        <div class="w-full h-3 bg-white/10 rounded-full overflow-hidden">
+
+                            <div class="h-full w-[90%] bg-cyan-400 rounded-full"></div>
+
+                        </div>
+
+                    </div>
+
+                    <div>
+
+                        <div class="flex justify-between mb-2">
+
+                            <span>JavaScript</span>
+                            <span>75%</span>
+
+                        </div>
+
+                        <div class="w-full h-3 bg-white/10 rounded-full overflow-hidden">
+
+                            <div class="h-full w-[75%] bg-cyan-400 rounded-full"></div>
+
+                        </div>
+
+                    </div>
+
+                    <div>
+
+                        <div class="flex justify-between mb-2">
+
+                            <span>PostgreSQL</span>
+                            <span>70%</span>
+
+                        </div>
+
+                        <div class="w-full h-3 bg-white/10 rounded-full overflow-hidden">
+
+                            <div class="h-full w-[70%] bg-cyan-400 rounded-full"></div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
 
-            <ul>
-
-              <li>
-                Développement d’applications web avec Django et JavaScript.
-              </li>
-
-              <li>
-                Création d’un système de gestion de présence par QR Code.
-              </li>
-
-              <li>
-                Conception de dashboards statistiques et systèmes de tracking.
-              </li>
-
-            </ul>
-
-          </div>
-
         </div>
 
-        <!-- PROJETS -->
+        <!-- RIGHT -->
 
-        <div class="section">
+        <div class="lg:col-span-2 space-y-10">
 
-          <div class="section-title">
-            Projets
-          </div>
+            <!-- Experience -->
 
-          <div class="experience">
+            <div class="rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl p-10">
 
-            <h3>
-              Application de Présence QR Code
-            </h3>
+                <h3 class="text-3xl font-semibold mb-10">
 
-            <ul>
+                    Expériences & Projets
 
-              <li>
-                Système de scan et suivi des présences en temps réel.
-              </li>
+                </h3>
 
-              <li>
-                Backend Django avec gestion des données.
-              </li>
+                <div class="space-y-10">
 
-              <li>
-                Dashboard analytique des utilisateurs et statistiques.
-              </li>
+                    <div class="relative pl-8 border-l border-cyan-400/30">
 
-            </ul>
+                        <div class="absolute w-4 h-4 bg-cyan-400 rounded-full -left-2 top-1"></div>
 
-          </div>
+                        <h4 class="text-2xl font-semibold">
 
-        </div>
+                            Portfolio Professionnel
 
-      </div>
+                        </h4>
 
-      <!-- RIGHT -->
+                        <p class="text-cyan-400 mt-2">
 
-      <div class="right">
+                            2026 - Présent
 
-        <!-- COMPETENCES -->
+                        </p>
 
-        <div class="section">
+                        <p class="text-gray-400 mt-4 leading-relaxed">
 
-          <div class="section-title">
-            Compétences
-          </div>
+                            Développement d’un portfolio moderne
+                            avec Django, TailwindCSS, PostgreSQL
+                            et déploiement cloud professionnel.
 
-          <div class="skills">
+                        </p>
 
-            <div class="skill">Python</div>
+                    </div>
 
-            <div class="skill">Django</div>
+                    <div class="relative pl-8 border-l border-cyan-400/30">
 
-            <div class="skill">JavaScript</div>
+                        <div class="absolute w-4 h-4 bg-cyan-400 rounded-full -left-2 top-1"></div>
 
-            <div class="skill">HTML/CSS</div>
+                        <h4 class="text-2xl font-semibold">
 
-            <div class="skill">Git/GitHub</div>
+                            Système QR Étudiants
 
-            <div class="skill">SQL</div>
+                        </h4>
 
-            <div class="skill">API REST</div>
+                        <p class="text-cyan-400 mt-2">
 
-            <div class="skill">Cybersécurité</div>
+                            Projet Fullstack
 
-          </div>
+                        </p>
 
-        </div>
+                        <p class="text-gray-400 mt-4 leading-relaxed">
 
-        <!-- FORMATION -->
+                            Création d’une plateforme de gestion
+                            de présence étudiante utilisant QR Code,
+                            backend Django et dashboard analytics.
 
-        <div class="section">
+                        </p>
 
-          <div class="section-title">
-            Formation
-          </div>
+                    </div>
 
-          <ul class="side-list">
+                </div>
 
-            <li>
-              Études en Médecine Humaine
-            </li>
+            </div>
 
-            <li>
-              Formation autodidacte en Développement Web
-            </li>
+            <!-- Tech Stack -->
 
-            <li>
-              Cybersécurité et Réseaux
-            </li>
+            <div class="rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl p-10">
 
-            <li>
-              Dépannage Informatique et Électronique
-            </li>
+                <h3 class="text-3xl font-semibold mb-8">
 
-          </ul>
+                    Technologies
 
-        </div>
+                </h3>
 
-        <!-- LANGUES -->
+                <div class="flex flex-wrap gap-4">
 
-        <div class="section">
+                    <span class="px-5 py-3 rounded-2xl bg-white/5 border border-white/10">
+                        Django
+                    </span>
 
-          <div class="section-title">
-            Langues
-          </div>
+                    <span class="px-5 py-3 rounded-2xl bg-white/5 border border-white/10">
+                        Python
+                    </span>
 
-          <ul class="side-list">
+                    <span class="px-5 py-3 rounded-2xl bg-white/5 border border-white/10">
+                        TailwindCSS
+                    </span>
 
-            <li>
-              Français — Courant
-            </li>
+                    <span class="px-5 py-3 rounded-2xl bg-white/5 border border-white/10">
+                        PostgreSQL
+                    </span>
 
-            <li>
-              Anglais — Intermédiaire
-            </li>
+                    <span class="px-5 py-3 rounded-2xl bg-white/5 border border-white/10">
+                        JavaScript
+                    </span>
 
-            <li>
-              Japonais — Niveau C1
-            </li>
+                    <span class="px-5 py-3 rounded-2xl bg-white/5 border border-white/10">
+                        Cloudinary
+                    </span>
 
-          </ul>
+                    <span class="px-5 py-3 rounded-2xl bg-white/5 border border-white/10">
+                        Render
+                    </span>
+
+                </div>
+
+            </div>
 
         </div>
-
-        <!-- CENTRES -->
-
-        <div class="section">
-
-          <div class="section-title">
-            Centres d’intérêt
-          </div>
-
-          <ul class="side-list">
-
-            <li>
-              Développement Web
-            </li>
-
-            <li>
-              Intelligence Artificielle
-            </li>
-
-            <li>
-              Innovation Médicale
-            </li>
-
-            <li>
-              Mentorat et accompagnement des jeunes
-            </li>
-
-          </ul>
-
-        </div>
-
-      </div>
 
     </div>
 
-  </div>
+</section>
 
-</div>
+{% endblock %}
 
-{% endblock %}	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	

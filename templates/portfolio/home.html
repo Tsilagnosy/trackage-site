@@ -1,67 +1,280 @@
 {% extends 'base.html' %}
-
-{% block title %}
-Accueil
-{% endblock %}
-
+{% load static %}
 {% block content %}
 
-<section class="text-center py-16">
+<section class="max-w-7xl mx-auto min-h-[85vh] flex items-center">
 
-    <h1 class="text-5xl font-bold mb-6">
-        Welcome to My Portfolio
-    </h1>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center w-full">
 
-    <p class="text-xl text-gray-400">
-        Web Developer Python & Django
-    </p>
+        <!-- LEFT CONTENT -->
 
-</section>
+        <div>
 
+            <!-- Badge -->
 
-<section class="mt-20">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-300 text-sm mb-8">
 
-    <h2 class="text-3xl font-bold mb-10">
-        Publications récentes
-    </h2>
+                <div class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></div>
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                Disponible pour des projets freelance
 
-        {% for publication in publications %}
+            </div>
 
-        <div class="bg-gray-900 rounded-2xl overflow-hidden shadow-lg">
+            <!-- Main Title -->
 
-            {% if publication.image %}
-            <img
-                src="{{ publication.image.url }}"
-                class="w-full h-52 object-cover"
-            >
-            {% endif %}
+            <h1 class="text-5xl md:text-7xl font-bold leading-tight">
 
-            <div class="p-6">
+                Développeur
 
-                <a
-                    href="/publication/{{ publication.id }}/"
-                >
-                    <h3 class="text-2xl font-semibold mb-4 hover:text-blue-400">
-                        {{ publication.title }}
-                    </h3>
+                <span class="text-cyan-400">
+                    Fullstack
+                </span>
+
+                moderne & créatif
+
+            </h1>
+
+            <!-- Description -->
+
+            <p class="mt-8 text-gray-400 text-lg leading-relaxed max-w-xl">
+
+                Je développe des applications web modernes,
+                performantes et professionnelles avec Django,
+                JavaScript et des technologies cloud modernes.
+
+            </p>
+
+            <!-- Buttons -->
+
+            <div class="flex flex-wrap gap-4 mt-10">
+
+                <a href="/contact/"
+                   class="px-8 py-4 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-black font-semibold transition duration-300 shadow-lg shadow-cyan-500/20">
+
+                    Me contacter
+
                 </a>
-                <p class="text-gray-400 mb-4">
-                    {{ publication.content|truncatewords:20 }}
-                </p>
 
-                <p class="text-sm text-gray-500">
-                    {{ publication.created_at }}
-                </p>
+                <a href="/cv/"
+                   class="px-8 py-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition duration-300">
+
+                    Voir mon CV
+
+                </a>
+
+            </div>
+
+            <!-- Stats -->
+
+            <div class="grid grid-cols-3 gap-6 mt-16">
+
+                <div>
+
+                    <h2 class="text-3xl font-bold text-cyan-400">
+                        10+
+                    </h2>
+
+                    <p class="text-gray-400 mt-2">
+                        Projets
+                    </p>
+
+                </div>
+
+                <div>
+
+                    <h2 class="text-3xl font-bold text-cyan-400">
+                        100%
+                    </h2>
+
+                    <p class="text-gray-400 mt-2">
+                        Responsive
+                    </p>
+
+                </div>
+
+                <div>
+
+                    <h2 class="text-3xl font-bold text-cyan-400">
+                        24/7
+                    </h2>
+
+                    <p class="text-gray-400 mt-2">
+                        Disponible
+                    </p>
+
+                </div>
 
             </div>
 
         </div>
 
+        <!-- RIGHT CONTENT -->
+
+        <div class="relative flex justify-center">
+
+            <!-- Glow -->
+
+            <div class="absolute w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl"></div>
+
+            <!-- Profile Card -->
+
+            <div class="relative backdrop-blur-2xl bg-white/5 border border-white/10 rounded-[2rem] p-8 shadow-2xl shadow-cyan-500/10">
+
+                <!-- Profile Image -->
+
+                <div class="w-72 h-72 rounded-3xl overflow-hidden border border-white/10">
+                <img src="{% static 'images/profile.jpeg' %}"
+                     alt="Julien Tsila"
+                     class="w-full h-full object-cover">
+
+                </div>
+                <!-- Tech Stack -->
+
+                <div class="mt-8 flex flex-wrap gap-3">
+
+                    <span class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm">
+                        Django
+                    </span>
+
+                    <span class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm">
+                        Python
+                    </span>
+
+                    <span class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm">
+                        JavaScript
+                    </span>
+
+                    <span class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm">
+                        TailwindCSS
+                    </span>
+
+                    <span class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm">
+                        PostgreSQL
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- PUBLICATIONS SECTION -->
+
+<section class="max-w-7xl mx-auto mt-32">
+
+    <!-- Section Header -->
+
+    <div class="flex items-center justify-between mb-14">
+
+        <div>
+
+            <h2 class="text-4xl font-bold">
+                Publications récentes
+            </h2>
+
+            <p class="text-gray-400 mt-3">
+                Mes derniers projets et publications.
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- Publications Grid -->
+
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+
+        {% for publication in publications %}
+
+        <article class="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl hover:border-cyan-400/30 transition duration-500 hover:-translate-y-2">
+
+            <!-- Image -->
+
+            {% if publication.image %}
+
+            <div class="overflow-hidden">
+
+                <img src="{{ publication.image.url }}"
+                     alt="{{ publication.title }}"
+                     class="w-full h-64 object-cover group-hover:scale-110 transition duration-700">
+
+            </div>
+
+            {% endif %}
+
+            <!-- Content -->
+
+            <div class="p-8">
+
+                <!-- Date -->
+
+                <p class="text-cyan-400 text-sm mb-4">
+
+                    {{ publication.created_at|date:"d M Y" }}
+
+                </p>
+
+                <!-- Title -->
+
+                <h3 class="text-2xl font-semibold mb-4 group-hover:text-cyan-400 transition">
+
+                    {{ publication.title }}
+
+                </h3>
+
+                <!-- Description -->
+
+                <p class="text-gray-400 leading-relaxed">
+
+                    {{ publication.content|truncatewords:25 }}
+
+                </p>
+
+                <!-- Footer -->
+
+                <div class="flex items-center justify-between mt-8">
+
+                    <span class="text-sm text-gray-500">
+
+                        {{ publication.views }} vues
+
+                    </span>
+
+                    <a href="#"
+                       class="text-cyan-400 hover:text-cyan-300 transition">
+
+                        Lire plus →
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
         {% empty %}
 
-        <p>Aucune publication disponible.</p>
+        <!-- Empty State -->
+
+        <div class="col-span-full">
+
+            <div class="rounded-[2rem] border border-dashed border-white/10 bg-white/5 p-16 text-center">
+
+                <h3 class="text-2xl font-semibold mb-4">
+                    Aucune publication pour le moment
+                </h3>
+
+                <p class="text-gray-400">
+                    Vos futures publications apparaîtront ici.
+                </p>
+
+            </div>
+
+        </div>
 
         {% endfor %}
 
@@ -70,7 +283,7 @@ Accueil
 </section>
 
 {% endblock %}
-	
+
 	
 	
 	

@@ -1,42 +1,252 @@
+{% load static %}
+{% load static tailwind_tags %}
 <!DOCTYPE html>
 <html lang="fr">
+<link rel="stylsheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" /> 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{% block title %}Portfolio{% endblock %}</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>
+        Portfolio Professionnel
+    </title>
+
+    {% tailwind_css %}
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+    </style>
 
 </head>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js">
+    <script>
+         AOS.init({
+        duration: 1000,
+        once: true,
+        });
+    </script>
+</script>
+<script>
 
-<body class="bg-gray-950 text-white">
+    const menuButton = document.getElementById('menu-button');
 
-    <nav class="bg-black border-b border-gray-800 p-4">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
+    const mobileMenu = document.getElementById('mobile-menu');
 
-            <h1 class="text-2xl font-bold">
-                Mon Portfolio
-            </h1>
+    const mobileLinks = mobileMenu.querySelectorAll('a');
 
-            <div class="space-x-6">
-                <a href="/" class="hover:text-blue-400">Accueil</a>
+    menuButton.addEventListener('click', () => {
 
-                <a href="/cv/" class="hover:text-blue-400">Mon CV</a>
+        mobileMenu.classList.toggle('hidden');
 
-                <a href="/contact/" class="hover:text-blue-400">Contact</a>
+    });
+
+    mobileLinks.forEach(link => {
+
+        link.addEventListener('click', () => {
+
+            mobileMenu.classList.add('hidden');
+
+        });
+
+    });
+
+</script>
+<body class="bg-[#0B0F19] text-white min-h-screen">
+
+    <!-- Background Effects -->
+
+    <div class="fixed inset-0 overflow-hidden -z-10">
+
+        <div class="absolute top-0 left-0 w-96 h-96 bg-cyan-500/20 blur-3xl rounded-full"></div>
+
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-blue-600/20 blur-3xl rounded-full"></div>
+
+    </div>
+
+    <!-- Navbar -->
+<nav class="fixed top-0 w-full z-50 backdrop-blur-xl bg-white/5 border-b border-white/10">
+
+    <div class="max-w-7xl mx-auto px-6">
+
+        <div class="flex items-center justify-between h-20">
+
+            <!-- Logo -->
+
+            <a href="/"
+               class="text-2xl font-bold tracking-tight">
+
+                Julien<span class="text-cyan-400">.</span>
+
+            </a>
+
+            <!-- Desktop Menu -->
+
+            <div class="hidden md:flex items-center gap-8">
+
+                <a href="/"
+                   class="text-gray-300 hover:text-cyan-400 transition duration-300">
+
+                    Accueil
+
+                </a>
+
+                <a href="/cv/"
+                   class="text-gray-300 hover:text-cyan-400 transition duration-300">
+
+                    CV
+
+                </a>
+
+                <a href="/contact/"
+                   class="text-gray-300 hover:text-cyan-400 transition duration-300">
+
+                    Contact
+
+                </a>
+
+                <a href="/admin/"
+                   class="px-5 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-semibold transition duration-300">
+
+                    Dashboard
+
+                </a>
+
+            </div>
+
+            <!-- Mobile Button -->
+
+            <button id="menu-button"
+                    class="md:hidden flex flex-col gap-1">
+
+                <span class="w-6 h-0.5 bg-white"></span>
+                <span class="w-6 h-0.5 bg-white"></span>
+                <span class="w-6 h-0.5 bg-white"></span>
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- Mobile Menu -->
+
+    <div id="mobile-menu"
+         class="hidden md:hidden border-t border-white/10 bg-[#0B0F19]/95 backdrop-blur-2xl">
+
+        <div class="flex flex-col px-6 py-6 gap-6">
+
+            <a href="/"
+               class="text-gray-300 hover:text-cyan-400 transition">
+
+                Accueil
+
+            </a>
+
+            <a href="/cv/"
+               class="text-gray-300 hover:text-cyan-400 transition">
+
+                CV
+
+            </a>
+
+            <a href="/contact/"
+               class="text-gray-300 hover:text-cyan-400 transition">
+
+                Contact
+
+            </a>
+
+            <a href="/admin/"
+               class="px-5 py-3 rounded-xl bg-cyan-500 text-center text-black font-semibold">
+
+                Dashboard
+
+            </a>
+
+        </div>
+
+    </div>
+
+</nav>
+    <!-- Main Content -->
+
+    <main class="pt-28 px-6">
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+    <!-- Footer -->
+
+    <footer class="mt-32 border-t border-white/10">
+
+        <div class="max-w-7xl mx-auto px-6 py-10">
+
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+
+                <div>
+
+                    <h2 class="text-xl font-semibold">
+                        Julien Tsila
+                    </h2>
+
+                    <p class="text-gray-400 mt-1">
+                        Développeur • Portfolio Professionnel
+                    </p>
+
+                </div>
+
+                <div class="flex items-center gap-6">
+
+                    <a href="#"
+                       class="text-gray-400 hover:text-cyan-400 transition">
+
+                        Telegram
+
+                    </a>
+
+                    <a href="#"
+                       class="text-gray-400 hover:text-cyan-400 transition">
+
+                        GitHub
+
+                    </a>
+
+                    <a href="#"
+                       class="text-gray-400 hover:text-cyan-400 transition">
+
+                        Email
+
+                    </a>
+
+                </div>
+
             </div>
 
         </div>
-    </nav>
 
-    <main class="max-w-6xl mx-auto p-6">
-        {% block content %}
-        {% endblock %}
-    </main>
+    </footer>
 
 </body>
-</html>	
+
+</html>
 	
 	
 	

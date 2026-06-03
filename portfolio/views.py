@@ -17,7 +17,7 @@ def home(request):
     ).order_by('-created_at')
 
     context = {
-        'publications': publications
+        'publications': publications,
     }
 
     return render(
