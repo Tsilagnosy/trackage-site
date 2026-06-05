@@ -35,8 +35,8 @@
                 {% for publication in publications %}
                 <tr>
                     <td>{{ publication.title }}</td>
-                    <td>{{ publication.reaction_count }}</td>
-                    <td>{% if publication.reaction_count > 50 %}4{% elif publication.reaction_count >= 30 %}3{% else %}2{% endif %}</td>
+                    <td>{{ publication.reaction_total }}</td>
+                    <td>{% if publication.reaction_total > 50 %}4{% elif publication.reaction_total >= 30 %}3{% else %}2{% endif %}</td>
                 </tr>
                 {% empty %}
                 <tr>

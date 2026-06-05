@@ -134,14 +134,14 @@ class PublicationAdmin(admin.ModelAdmin):
 
     def statistics_view(self, request):
         publications = Publication.objects.annotate(
-            reaction_count=Count('reactions')
-        ).order_by('-reaction_count')[:10]
+            reaction_total=Count('reactions')
+        ).order_by('-reaction_total')[:10]
         total_reactions = PublicationReaction.objects.count()
         total_publications = Publication.objects.count()
         rating_summary = {
-            '4 étoiles': Publication.objects.annotate(reaction_count=Count('reactions')).filter(reaction_count__gt=50).count(),
-            '3 étoiles': Publication.objects.annotate(reaction_count=Count('reactions')).filter(reaction_count__gte=30, reaction_count__lte=50).count(),
-            '2 étoiles': Publication.objects.annotate(reaction_count=Count('reactions')).filter(reaction_count__lt=30).count(),
+            '4 étoiles': Publication.objects.annotate(reaction_total=Count('reactions')).filter(reaction_total__gt=50).count(),
+            '3 étoiles': Publication.objects.annotate(reaction_total=Count('reactions')).filter(reaction_total__gte=30, reaction_total__lte=50).count(),
+            '2 étoiles': Publication.objects.annotate(reaction_total=Count('reactions')).filter(reaction_total__lt=30).count(),
         }
 
         context = {
