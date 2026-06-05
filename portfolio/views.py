@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from .models import (
     Album,
     Publication,
+    Video,
     ContactMessage,
     VisitorAnalytics,
 )
@@ -21,9 +22,14 @@ def home(request):
         is_published=True
     ).order_by('-created_at')[:3]
 
+    videos = Video.objects.filter(
+        is_published=True
+    ).order_by('-created_at')[:6]
+
     context = {
         'publications': publications,
         'albums': albums,
+        'videos': videos,
     }
 
     return render(
@@ -65,7 +71,8 @@ def album_list(request):
 def album_detail(request, slug):
     album = get_object_or_404(Album, slug=slug, is_published=True)
     videos = album.videos.filter(is_published=True)
-    return render(request, 'portfolio/album_detail.html', {'album': album, 'videos': videos})
+    photos = album.photos.all()
+    return render(request, 'portfolio/album_detail.html', {'album': album, 'videos': videos, 'photos': photos})
 
 
 def about(request):

@@ -16,6 +16,19 @@
         </div>
     </div>
 
+    {% if photos %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+        {% for photo in photos %}
+        <div class="rounded-[2rem] overflow-hidden border border-white/10 bg-white/5">
+            <img src="{{ photo.image.url }}" alt="{{ photo.caption|default:album.title }}" class="w-full h-64 object-cover" />
+            {% if photo.caption %}
+            <div class="p-4 text-gray-400 text-sm">{{ photo.caption }}</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <div class="grid grid-cols-1 gap-8">
         {% for video in videos %}
         <article class="rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl overflow-hidden">

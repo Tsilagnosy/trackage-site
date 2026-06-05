@@ -260,6 +260,118 @@
 
 </section>
 
+<!-- VIDEOS SECTION -->
+
+<section class="max-w-7xl mx-auto mt-32">
+
+    <div class="flex items-center justify-between mb-14">
+
+        <div>
+
+            <h2 class="text-4xl font-bold">
+                Dernières vidéos
+            </h2>
+
+            <p class="text-gray-400 mt-3">
+                Découvrez mes vidéos les plus récentes et mes tutoriels.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+
+        {% for video in videos %}
+
+        <article class="group overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl hover:border-cyan-400/30 transition duration-500 hover:-translate-y-2">
+
+            <div class="relative overflow-hidden h-72 bg-black/50 flex items-center justify-center">
+
+                {% if video.video_file %}
+
+                <video class="w-full h-full object-cover group-hover:scale-105 transition duration-700"
+                       controls
+                       preload="metadata">
+                    <source src="{{ video.video_file.url }}" type="video/mp4">
+                </video>
+
+                {% elif video.video_url %}
+
+                <div class="w-full h-full flex items-center justify-center bg-black/70">
+                    <a href="{{ video.video_url }}" target="_blank" rel="noopener noreferrer"
+                       class="flex items-center justify-center w-16 h-16 rounded-full bg-cyan-500 hover:bg-cyan-400 transition">
+                        <svg class="w-6 h-6 text-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
+                        </svg>
+                    </a>
+                </div>
+
+                {% else %}
+
+                <div class="text-gray-400">
+                    Aucune vidéo
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            <div class="p-8">
+
+                <p class="text-cyan-400 text-sm mb-4">
+                    {{ video.created_at|date:"d M Y" }}
+                </p>
+
+                <h3 class="text-2xl font-semibold mb-4 group-hover:text-cyan-400 transition">
+                    {{ video.title }}
+                </h3>
+
+                <p class="text-gray-400 leading-relaxed">
+                    {{ video.description|truncatewords:15 }}
+                </p>
+
+                <div class="mt-8 flex items-center justify-between">
+
+                    <span class="text-sm text-gray-500">
+                        Album: {{ video.album.title }}
+                    </span>
+
+                    <a href="{{ video.album.get_absolute_url }}"
+                       class="text-cyan-400 hover:text-cyan-300 transition">
+                        Voir l'album →
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
+        {% empty %}
+
+        <div class="col-span-full">
+
+            <div class="rounded-[2rem] border border-dashed border-white/10 bg-white/5 p-16 text-center">
+
+                <h3 class="text-2xl font-semibold mb-4">
+                    Aucune vidéo pour le moment
+                </h3>
+
+                <p class="text-gray-400">
+                    Les vidéos apparaîtront ici dès qu'elles seront publiées.
+                </p>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
 <!-- PUBLICATIONS SECTION -->
 
 <section class="max-w-7xl mx-auto mt-32">

@@ -25,7 +25,7 @@ class Album(models.Model):
     description = models.TextField(blank=True)
     cover_image = models.ImageField(upload_to='albums/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    is_published = models.BooleanField(default=True)
+    is_published = models.BooleanField(default=True, verbose_name='Album publié')
 
     class Meta:
         ordering = ['-created_at']
@@ -42,6 +42,19 @@ class Album(models.Model):
         super().save(*args, **kwargs)
 
 
+class AlbumPhoto(models.Model):
+    album = models.ForeignKey(Album, related_name='photos', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='album_photos/')
+    caption = models.CharField(max_length=220, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.caption or f"Photo de {self.album.title}"
+
+
 class Video(models.Model):
     album = models.ForeignKey(Album, related_name='videos', on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
@@ -49,7 +62,7 @@ class Video(models.Model):
     video_file = models.FileField(upload_to='videos/', blank=True, null=True)
     video_url = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    is_published = models.BooleanField(default=True)
+    is_published = models.BooleanField(default=True, verbose_name='Vidéo publiée')
 
     class Meta:
         ordering = ['-created_at']
