@@ -8,6 +8,7 @@ from .models import (
     Publication,
     PublicationReaction,
     Video,
+    VideoReaction,
     ContactMessage,
     VisitorAnalytics,
 )
@@ -51,12 +52,31 @@ def home(request):
     )
     user_reaction_by_publication = {r.publication_id: r.kind for r in user_reactions}
 
+    video_ids = [video.id for video in videos]
+    video_reaction_counts = VideoReaction.objects.filter(
+        video_id__in=video_ids
+    ).values('video_id', 'kind').annotate(count=Count('id'))
+
+    reaction_summary_by_video = {}
+    for item in video_reaction_counts:
+        video_id = item['video_id']
+        kind = item['kind']
+        reaction_summary_by_video.setdefault(video_id, {})[kind] = item['count']
+
+    video_user_reactions = VideoReaction.objects.filter(
+        video_id__in=video_ids,
+        visitor_id=visitor_id
+    )
+    user_reaction_by_video = {r.video_id: r.kind for r in video_user_reactions}
+
     context = {
         'publications': publications,
         'albums': albums,
         'videos': videos,
         'reaction_summary_by_publication': reaction_summary_by_publication,
         'user_reaction_by_publication': user_reaction_by_publication,
+        'reaction_summary_by_video': reaction_summary_by_video,
+        'user_reaction_by_video': user_reaction_by_video,
         'reaction_choices': PublicationReaction.REACTION_CHOICES,
     }
 
@@ -163,6 +183,44 @@ def react_publication(request, publication_id):
         stars = 2
 
     return JsonResponse({'summary': summary, 'total': total, 'stars': stars, 'active': active, 'selected_kind': kind})
+
+
+def react_video(request, video_id):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+    video = get_object_or_404(Video, id=video_id)
+    kind = request.POST.get('kind') or request.JSON.get('kind') if hasattr(request, 'JSON') else request.POST.get('kind')
+    if kind not in dict(VideoReaction.REACTION_CHOICES):
+        return JsonResponse({'error': 'Invalid reaction kind'}, status=400)
+
+    visitor_id = request.COOKIES.get('visitor_id')
+    ip_address = request.META.get('REMOTE_ADDR')
+    lookup_kwargs = {'video': video}
+    if visitor_id:
+        lookup_kwargs['visitor_id'] = visitor_id
+    else:
+        lookup_kwargs['ip_address'] = ip_address
+
+    existing = VideoReaction.objects.filter(**lookup_kwargs).first()
+    active = True
+    if existing:
+        if existing.kind == kind:
+            existing.delete()
+            active = False
+        else:
+            existing.kind = kind
+            existing.save(update_fields=['kind'])
+            active = True
+    else:
+        VideoReaction.objects.create(video=video, ip_address=ip_address, visitor_id=visitor_id, kind=kind)
+        active = True
+
+    reaction_counts = video.reactions.values('kind').annotate(count=Count('id'))
+    summary = {r['kind']: r['count'] for r in reaction_counts}
+    total = sum(summary.values())
+
+    return JsonResponse({'summary': summary, 'total': total, 'active': active, 'selected_kind': kind})
 
 
 def album_list(request):

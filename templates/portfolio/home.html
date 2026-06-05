@@ -331,16 +331,26 @@
                     {{ video.description|truncatewords:15 }}
                 </p>
 
-                <div class="mt-8 flex items-center justify-between">
+                <div class="mt-8 flex flex-col gap-4">
 
-                    <span class="text-sm text-gray-500">
-                        Album: {{ video.album.title }}
-                    </span>
+                    <div class="flex items-center justify-between gap-4">
+                        <span class="text-sm text-gray-500 video-total-count" data-video-id="{{ video.id }}">❤️ {{ video.reaction_count }} réactions</span>
+                        <span class="text-sm text-gray-400">Réagissez à cette vidéo</span>
+                    </div>
 
-                    <a href="{{ video.album.get_absolute_url }}"
-                       class="text-cyan-400 hover:text-cyan-300 transition">
-                        Voir l'album →
-                    </a>
+                    <div class="flex flex-wrap gap-2">
+                        {% for kind, label in reaction_choices %}
+                        <button type="button" data-content-type="video" data-video-id="{{ video.id }}" data-kind="{{ kind }}" class="reaction-card-btn inline-flex items-center gap-2 px-3 py-2 rounded-2xl border border-white/10 text-sm text-gray-200 hover:bg-white/10 transition{% if user_reaction_by_video|get_item:video.id == kind %} bg-cyan-500/20{% else %} bg-white/5{% endif %}">
+                            {% if kind == 'like' %}👍{% elif kind == 'love' %}❤️{% elif kind == 'wow' %}😮{% elif kind == 'sad' %}😢{% elif kind == 'angry' %}😡{% endif %}
+                            <span class="reaction-count">{{ reaction_summary_by_video|get_item:video.id|get_item:kind|default:0 }}</span>
+                        </button>
+                        {% endfor %}
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">Album: {{ video.album.title }}</span>
+                        <a href="{{ video.album.get_absolute_url }}" class="text-cyan-400 hover:text-cyan-300 transition">Voir l'album →</a>
+                    </div>
 
                 </div>
 
@@ -450,12 +460,12 @@
                 <div class="flex flex-col gap-4 mt-8">
                     <div class="flex flex-col gap-2">
                         <span class="text-sm text-gray-500">{{ publication.views }} vues</span>
-                        <span class="text-sm text-gray-500">❤️ {{ publication.reaction_count }} réactions · ⭐ {{ publication.rating_stars }} étoiles</span>
+                        <span class="text-sm text-gray-500 publication-total-count" data-publication-id="{{ publication.id }}">❤️ {{ publication.reaction_count }} réactions · ⭐ {{ publication.rating_stars }} étoiles</span>
                     </div>
 
                     <div class="flex flex-wrap gap-2">
                         {% for kind, label in reaction_choices %}
-                        <button type="button" data-publication-id="{{ publication.id }}" data-kind="{{ kind }}" class="reaction-card-btn inline-flex items-center gap-2 px-3 py-2 rounded-2xl border border-white/10 text-sm text-gray-200 hover:bg-white/10 transition{% if user_reaction_by_publication|get_item:publication.id == kind %} bg-cyan-500/20{% else %} bg-white/5{% endif %}">
+                        <button type="button" data-content-type="publication" data-publication-id="{{ publication.id }}" data-kind="{{ kind }}" class="reaction-card-btn inline-flex items-center gap-2 px-3 py-2 rounded-2xl border border-white/10 text-sm text-gray-200 hover:bg-white/10 transition{% if user_reaction_by_publication|get_item:publication.id == kind %} bg-cyan-500/20{% else %} bg-white/5{% endif %}">
                             {% if kind == 'like' %}👍{% elif kind == 'love' %}❤️{% elif kind == 'wow' %}😮{% elif kind == 'sad' %}😢{% elif kind == 'angry' %}😡{% endif %}
                             <span class="reaction-count">{{ reaction_summary_by_publication|get_item:publication.id|get_item:kind|default:0 }}</span>
                         </button>
@@ -522,8 +532,9 @@
         buttons.forEach(btn => {
             btn.addEventListener('click', function() {
                 const kind = this.dataset.kind;
-                const publicationId = this.dataset.publicationId;
-                const url = `/publication/${publicationId}/react/`;
+                const type = this.dataset.contentType || 'publication';
+                const id = type === 'video' ? this.dataset.videoId : this.dataset.publicationId;
+                const url = type === 'video' ? `/video/${id}/react/` : `/publication/${id}/react/`;
                 fetch(url, {
                     method: 'POST',
                     headers: {
@@ -534,10 +545,31 @@
                 }).then(r => r.json()).then(data => {
                     if (data.summary) {
                         buttons.forEach(b => {
-                            if (b.dataset.publicationId !== publicationId) return;
+                            if ((type === 'video' && b.dataset.videoId !== id) || (type === 'publication' && b.dataset.publicationId !== id)) return;
+                            if (b.dataset.contentType !== type) return;
                             const k = b.dataset.kind;
                             const count = data.summary[k] || 0;
                             const span = b.querySelector('.reaction-count');
+                            if (span) span.textContent = count;
+                            if (k === data.selected_kind && data.active) {
+                                b.classList.add('bg-cyan-500/20');
+                            } else {
+                                b.classList.remove('bg-cyan-500/20');
+                            }
+                        });
+
+                        const totalText = `${data.total} réactions`;
+                        if (type === 'publication') {
+                            const totalSpan = document.querySelector(`.publication-total-count[data-publication-id="${id}"]`);
+                            if (totalSpan) totalSpan.textContent = `❤️ ${data.total} réactions · ⭐ ${data.stars} étoiles`;
+                        } else {
+                            const totalSpan = document.querySelector(`.video-total-count[data-video-id="${id}"]`);
+                            if (totalSpan) totalSpan.textContent = `❤️ ${data.total} réactions`;
+                        }
+                    }
+                }).catch(err => console.error(err));
+            });
+        });
                             if (span) span.textContent = count;
                             if (k === kind) {
                                 if (data.active) {

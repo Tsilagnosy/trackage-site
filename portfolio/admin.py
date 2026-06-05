@@ -10,6 +10,7 @@ from .models import (
     Publication,
     PublicationReaction,
     Video,
+    VideoReaction,
     VisitorAnalytics,
     ContactMessage,
 )
@@ -160,6 +161,20 @@ class PublicationAdmin(admin.ModelAdmin):
 
     def rating_stars(self, obj):
         return '★' * obj.rating_stars
+
+
+@admin.register(PublicationReaction)
+class PublicationReactionAdmin(admin.ModelAdmin):
+    list_display = ('publication', 'kind', 'visitor_id', 'ip_address', 'created_at')
+    list_filter = ('kind', 'created_at')
+    search_fields = ('publication__title', 'visitor_id', 'ip_address')
+
+
+@admin.register(VideoReaction)
+class VideoReactionAdmin(admin.ModelAdmin):
+    list_display = ('video', 'kind', 'visitor_id', 'ip_address', 'created_at')
+    list_filter = ('kind', 'created_at')
+    search_fields = ('video__title', 'visitor_id', 'ip_address')
 
 
 @admin.register(VisitorAnalytics)

@@ -83,6 +83,10 @@ class Video(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def reaction_count(self):
+        return self.reactions.count()
+
 
 class VisitorAnalytics(models.Model):
     ip_address = models.GenericIPAddressField()
@@ -121,6 +125,32 @@ class PublicationReaction(models.Model):
 
     def __str__(self):
         return f"Reaction ({self.kind}) pour {self.publication.title} - {self.created_at:%Y-%m-%d %H:%M}"
+
+
+class VideoReaction(models.Model):
+    video = models.ForeignKey(
+        'Video',
+        related_name='reactions',
+        on_delete=models.CASCADE
+    )
+    REACTION_CHOICES = [
+        ('like', 'Like'),
+        ('love', 'Love'),
+        ('wow', 'Wow'),
+        ('sad', 'Sad'),
+        ('angry', 'Angry'),
+    ]
+
+    kind = models.CharField(max_length=10, choices=REACTION_CHOICES, default='like')
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
+    visitor_id = models.CharField(max_length=64, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Reaction ({self.kind}) pour {self.video.title} - {self.created_at:%Y-%m-%d %H:%M}"
 
 
 class ContactMessage(models.Model):
