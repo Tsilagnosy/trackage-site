@@ -13,6 +13,7 @@ from .models import (
 )
 
 from django.http import JsonResponse
+import uuid
 
 
 def home(request):
@@ -56,9 +57,19 @@ def publication_detail(request, publication_id):
     reaction_counts = publication.reactions.values('kind').annotate(count=Count('id'))
     reaction_summary = {r['kind']: r['count'] for r in reaction_counts}
 
-    # current visitor reaction (by IP)
-    ip_address = request.META.get('REMOTE_ADDR')
-    user_reaction = publication.reactions.filter(ip_address=ip_address).first()
+    # identify visitor by cookie if available, otherwise fallback to IP
+    visitor_id = request.COOKIES.get('visitor_id')
+    if not visitor_id:
+        visitor_id = str(uuid.uuid4())
+
+    # current visitor reaction (by visitor_id then ip)
+    user_reaction = None
+    if visitor_id:
+        user_reaction = publication.reactions.filter(visitor_id=visitor_id).first()
+    if not user_reaction:
+        ip_address = request.META.get('REMOTE_ADDR')
+        user_reaction = publication.reactions.filter(ip_address=ip_address).first()
+
     user_kind = user_reaction.kind if user_reaction else None
 
     context = {
@@ -67,11 +78,17 @@ def publication_detail(request, publication_id):
         'user_reaction_kind': user_kind,
     }
 
-    return render(
+    response = render(
         request,
         'portfolio/publication_detail.html',
         context
     )
+
+    # ensure visitor_id cookie is set for future requests
+    if not request.COOKIES.get('visitor_id'):
+        response.set_cookie('visitor_id', visitor_id, max_age=60*60*24*365)  # 1 year
+
+    return response
 
 
 def react_publication(request, publication_id):
@@ -83,17 +100,23 @@ def react_publication(request, publication_id):
     if kind not in dict(PublicationReaction.REACTION_CHOICES):
         return JsonResponse({'error': 'Invalid reaction kind'}, status=400)
 
+    visitor_id = request.COOKIES.get('visitor_id')
     ip_address = request.META.get('REMOTE_ADDR')
-    existing = PublicationReaction.objects.filter(publication=publication, ip_address=ip_address).first()
+    lookup_kwargs = {'publication': publication}
+    if visitor_id:
+        lookup_kwargs['visitor_id'] = visitor_id
+    else:
+        lookup_kwargs['ip_address'] = ip_address
+
+    existing = PublicationReaction.objects.filter(**lookup_kwargs).first()
     if existing:
         if existing.kind == kind:
-            # toggle off
             existing.delete()
         else:
             existing.kind = kind
             existing.save(update_fields=['kind'])
     else:
-        PublicationReaction.objects.create(publication=publication, ip_address=ip_address, kind=kind)
+        PublicationReaction.objects.create(publication=publication, ip_address=ip_address, visitor_id=visitor_id, kind=kind)
 
     # return updated counts
     reaction_counts = publication.reactions.values('kind').annotate(count=Count('id'))

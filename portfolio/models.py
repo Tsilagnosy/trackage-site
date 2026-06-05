@@ -113,6 +113,7 @@ class PublicationReaction(models.Model):
 
     kind = models.CharField(max_length=10, choices=REACTION_CHOICES, default='like')
     ip_address = models.GenericIPAddressField(blank=True, null=True)
+    visitor_id = models.CharField(max_length=64, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
