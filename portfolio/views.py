@@ -4,9 +4,10 @@ from django.utils.timezone import now
 from datetime import timedelta
 from django.contrib.auth.decorators import login_required
 from .models import (
-    Publication, 
+    Album,
+    Publication,
     ContactMessage,
-    VisitorAnalytics
+    VisitorAnalytics,
 )
 
 
@@ -16,8 +17,13 @@ def home(request):
         is_published=True
     ).order_by('-created_at')
 
+    albums = Album.objects.filter(
+        is_published=True
+    ).order_by('-created_at')[:3]
+
     context = {
         'publications': publications,
+        'albums': albums,
     }
 
     return render(
@@ -25,6 +31,7 @@ def home(request):
         'portfolio/home.html',
         context
     )
+
 
 def publication_detail(request, publication_id):
 
@@ -46,7 +53,21 @@ def publication_detail(request, publication_id):
         'portfolio/publication_detail.html',
         context
     )
-	
+
+
+def album_list(request):
+    albums = Album.objects.filter(
+        is_published=True
+    ).order_by('-created_at')
+    return render(request, 'portfolio/album_list.html', {'albums': albums})
+
+
+def album_detail(request, slug):
+    album = get_object_or_404(Album, slug=slug, is_published=True)
+    videos = album.videos.filter(is_published=True)
+    return render(request, 'portfolio/album_detail.html', {'album': album, 'videos': videos})
+
+
 def about(request):
 
     return render(
@@ -76,8 +97,10 @@ def contact(request):
     return render(
         request,
         'portfolio/contact.html'
-    )	
-@login_required	
+    )
+
+
+@login_required
 def dashboard(request):
 
     today = now().date()

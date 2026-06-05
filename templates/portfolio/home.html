@@ -161,6 +161,105 @@
     </div>
 
 </section>
+
+<!-- ALBUMS SECTION -->
+
+<section class="max-w-7xl mx-auto mt-32">
+
+    <div class="flex items-center justify-between mb-14">
+
+        <div>
+
+            <h2 class="text-4xl font-bold">
+                Albums vidéo
+            </h2>
+
+            <p class="text-gray-400 mt-3">
+                Découvrez mes projets en vidéo et mes dernières réalisations.
+            </p>
+
+        </div>
+
+        <a href="{% url 'album_list' %}"
+           class="text-cyan-400 hover:text-cyan-300 transition">
+            Voir tous les albums →
+        </a>
+
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+
+        {% for album in albums %}
+
+        <article class="group overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl hover:border-cyan-400/30 transition duration-500 hover:-translate-y-2">
+
+            {% if album.cover_image %}
+            <div class="overflow-hidden h-72">
+                <img src="{{ album.cover_image.url }}"
+                     alt="{{ album.title }}"
+                     class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+            </div>
+            {% else %}
+            <div class="h-72 flex items-center justify-center bg-white/5 text-gray-400">
+                Couverture à venir
+            </div>
+            {% endif %}
+
+            <div class="p-8">
+
+                <p class="text-cyan-400 text-sm mb-4">
+                    {{ album.created_at|date:"d M Y" }}
+                </p>
+
+                <h3 class="text-2xl font-semibold mb-4 group-hover:text-cyan-400 transition">
+                    {{ album.title }}
+                </h3>
+
+                <p class="text-gray-400 leading-relaxed">
+                    {{ album.description|truncatewords:20 }}
+                </p>
+
+                <div class="mt-8 flex items-center justify-between">
+
+                    <span class="text-sm text-gray-500">
+                        {{ album.videos.count }} vidéos
+                    </span>
+
+                    <a href="{{ album.get_absolute_url }}"
+                       class="text-cyan-400 hover:text-cyan-300 transition">
+                        Voir l’album →
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
+        {% empty %}
+
+        <div class="col-span-full">
+
+            <div class="rounded-[2rem] border border-dashed border-white/10 bg-white/5 p-16 text-center">
+
+                <h3 class="text-2xl font-semibold mb-4">
+                    Aucun album pour le moment
+                </h3>
+
+                <p class="text-gray-400">
+                    Les albums apparaîtront ici dès qu’ils seront publiés.
+                </p>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
 <!-- PUBLICATIONS SECTION -->
 
 <section class="max-w-7xl mx-auto mt-32">
@@ -243,7 +342,7 @@
 
                     </span>
 
-                    <a href="#"
+                    <a href="{% url 'publication_detail' publication.id %}"
                        class="text-cyan-400 hover:text-cyan-300 transition">
 
                         Lire plus →

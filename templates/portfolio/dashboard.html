@@ -1,113 +1,197 @@
 {% extends 'base.html' %}
-
-{% block title %}
-Dashboard
-{% endblock %}
-
+{% block title %}Dashboard{% endblock %}
 {% block content %}
 
-<section class="py-10">
+<section class="max-w-7xl mx-auto py-8">
 
-    <h1 class="text-5xl font-bold mb-10">
-        Dashboard Analytics
-    </h1>
+    <!-- Header -->
+    <div class="mb-12">
+        <h1 class="text-5xl md:text-6xl font-bold mb-4">Dashboard</h1>
+        <p class="text-gray-400 text-lg">Suivi des analyses et statistiques de votre portfolio</p>
+    </div>
 
-    <div class="grid md:grid-cols-3 gap-6 mb-10">
+    <!-- Key Metrics Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
+        
+        <!-- Total Visitors -->
+        <div class="rounded-[2rem] border border-white/10 bg-gradient-to-br from-cyan-500/10 to-blue-600/10 backdrop-blur-xl p-8 hover:border-cyan-400/30 transition">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-gray-400 text-sm font-medium">VISITEURS TOTAUX</h3>
+                <div class="w-12 h-12 rounded-2xl bg-cyan-500/20 flex items-center justify-center text-cyan-400 text-xl">👥</div>
+            </div>
+            <p class="text-4xl font-bold text-white">{{ total_visitors }}</p>
+            <p class="text-cyan-400 text-sm mt-2">+12% depuis la semaine dernière</p>
+        </div>
 
-        <div class="bg-gray-900 p-6 rounded-2xl">
-            <h2 class="text-gray-400 mb-2">
-                Visiteurs Totaux
-            </h2>
+        <!-- Publications -->
+        <div class="rounded-[2rem] border border-white/10 bg-gradient-to-br from-blue-500/10 to-purple-600/10 backdrop-blur-xl p-8 hover:border-blue-400/30 transition">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-gray-400 text-sm font-medium">PUBLICATIONS</h3>
+                <div class="w-12 h-12 rounded-2xl bg-blue-500/20 flex items-center justify-center text-blue-400 text-xl">📝</div>
+            </div>
+            <p class="text-4xl font-bold text-white">{{ total_publications }}</p>
+            <p class="text-blue-400 text-sm mt-2">Articles publiés</p>
+        </div>
 
-            <p class="text-4xl font-bold">
-                {{ total_visitors }}
-            </p>
+        <!-- Albums -->
+        <div class="rounded-[2rem] border border-white/10 bg-gradient-to-br from-purple-500/10 to-pink-600/10 backdrop-blur-xl p-8 hover:border-purple-400/30 transition">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-gray-400 text-sm font-medium">ALBUMS VIDÉO</h3>
+                <div class="w-12 h-12 rounded-2xl bg-purple-500/20 flex items-center justify-center text-purple-400 text-xl">🎬</div>
+            </div>
+            <p class="text-4xl font-bold text-white">{{ total_albums }}</p>
+            <p class="text-purple-400 text-sm mt-2">Projets vidéo</p>
+        </div>
+
+        <!-- Messages -->
+        <div class="rounded-[2rem] border border-white/10 bg-gradient-to-br from-pink-500/10 to-red-600/10 backdrop-blur-xl p-8 hover:border-pink-400/30 transition">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-gray-400 text-sm font-medium">MESSAGES</h3>
+                <div class="w-12 h-12 rounded-2xl bg-pink-500/20 flex items-center justify-center text-pink-400 text-xl">💬</div>
+            </div>
+            <p class="text-4xl font-bold text-white">{{ unread_messages }}</p>
+            <p class="text-pink-400 text-sm mt-2">Non lus</p>
         </div>
 
     </div>
 
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-12">
+        
+        <!-- Traffic Chart -->
+        <div class="xl:col-span-2 rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl p-10">
+            <h2 class="text-2xl font-bold mb-8 flex items-center gap-3">
+                <span class="w-8 h-8 rounded-xl bg-cyan-500/20 flex items-center justify-center text-cyan-400">📊</span>
+                Trafic 7 derniers jours
+            </h2>
+            <canvas id="trafficChart" class="max-h-80"></canvas>
+        </div>
 
-    <div class="bg-gray-900 p-6 rounded-2xl mb-10">
-
-        <h2 class="text-2xl font-bold mb-6">
-            Trafic 7 derniers jours
-        </h2>
-
-        <canvas id="trafficChart"></canvas>
+        <!-- Stats Summary -->
+        <div class="rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl p-10">
+            <h2 class="text-2xl font-bold mb-8 flex items-center gap-3">
+                <span class="w-8 h-8 rounded-xl bg-cyan-500/20 flex items-center justify-center text-cyan-400">📈</span>
+                Aperçu
+            </h2>
+            <div class="space-y-6">
+                <div>
+                    <div class="flex justify-between mb-2">
+                        <span class="text-gray-400">Engagement</span>
+                        <span class="text-cyan-400 font-semibold">89%</span>
+                    </div>
+                    <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div class="h-full w-[89%] bg-gradient-to-r from-cyan-500 to-cyan-400 rounded-full"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between mb-2">
+                        <span class="text-gray-400">Contenu</span>
+                        <span class="text-cyan-400 font-semibold">75%</span>
+                    </div>
+                    <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div class="h-full w-[75%] bg-gradient-to-r from-blue-500 to-blue-400 rounded-full"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between mb-2">
+                        <span class="text-gray-400">Performance</span>
+                        <span class="text-cyan-400 font-semibold">95%</span>
+                    </div>
+                    <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div class="h-full w-[95%] bg-gradient-to-r from-purple-500 to-purple-400 rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
 
-
-    <div class="bg-gray-900 p-6 rounded-2xl">
-
-        <h2 class="text-2xl font-bold mb-6">
+    <!-- Publications Populaires -->
+    <div class="rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl p-10">
+        <h2 class="text-2xl font-bold mb-8 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-cyan-500/20 flex items-center justify-center text-cyan-400">⭐</span>
             Publications populaires
         </h2>
-
         <div class="space-y-4">
-
             {% for publication in popular_publications %}
-
-            <div class="flex justify-between border-b border-gray-700 pb-3">
-
-                <span>
-                    {{ publication.title }}
-                </span>
-
-                <span>
-                    👁 {{ publication.views }}
-                </span>
-
+            <div class="flex items-center justify-between p-4 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition">
+                <div class="flex-1">
+                    <h3 class="font-semibold text-white mb-1">{{ publication.title }}</h3>
+                    <p class="text-gray-400 text-sm">{{ publication.created_at|date:"d M Y" }}</p>
+                </div>
+                <div class="flex items-center gap-4 text-right">
+                    <div>
+                        <p class="text-2xl font-bold text-cyan-400">{{ publication.views }}</p>
+                        <p class="text-gray-400 text-xs">Vues</p>
+                    </div>
+                </div>
             </div>
-
+            {% empty %}
+            <div class="text-center py-8 text-gray-400">
+                Aucune publication pour le moment
+            </div>
             {% endfor %}
-
         </div>
-
     </div>
 
 </section>
 
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js@latest"></script>
 <script>
-
-const ctx = document.getElementById('trafficChart');
-
-new Chart(ctx, {
-    type: 'line',
-
-    data: {
-        labels: [
-            {% for item in visitors_per_day %}
-                "{{ item.day }}",
-            {% endfor %}
-        ],
-
-        datasets: [{
-            label: 'Visiteurs',
-
-            data: [
-                {% for item in visitors_per_day %}
-                    {{ item.count }},
-                {% endfor %}
-            ],
-
-            tension: 0.4
-        }]
+    const ctx = document.getElementById('trafficChart');
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [
+                    {% for item in visitors_per_day %}
+                        "{{ item.day }}",
+                    {% endfor %}
+                ],
+                datasets: [{
+                    label: 'Visiteurs',
+                    data: [
+                        {% for item in visitors_per_day %}
+                            {{ item.count }},
+                        {% endfor %}
+                    ],
+                    borderColor: 'rgb(34, 211, 238)',
+                    backgroundColor: 'rgba(34, 211, 238, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 2,
+                    pointBackgroundColor: 'rgb(34, 211, 238)',
+                    pointBorderColor: '#fff',
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            color: 'rgb(156, 163, 175)',
+                            font: { size: 12, weight: '500' }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: 'rgb(156, 163, 175)' },
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                    },
+                    x: {
+                        ticks: { color: 'rgb(156, 163, 175)' },
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                    }
+                }
+            }
+        });
     }
-});
-
 </script>
 
 {% endblock %}
-	
-	
-	
-	
-	
-	
-	
-	
-	

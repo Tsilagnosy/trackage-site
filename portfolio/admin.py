@@ -1,10 +1,34 @@
 from django.contrib import admin
 
 from .models import (
+    Album,
     Publication,
+    Video,
     VisitorAnalytics,
-    ContactMessage
+    ContactMessage,
 )
+
+
+class VideoInline(admin.TabularInline):
+    model = Video
+    extra = 1
+    fields = ('title', 'video_file', 'video_url', 'is_published')
+
+
+@admin.register(Album)
+class AlbumAdmin(admin.ModelAdmin):
+    list_display = ('title', 'created_at', 'is_published')
+    prepopulated_fields = {'slug': ('title',)}
+    inlines = [VideoInline]
+    search_fields = ('title', 'description')
+    list_filter = ('is_published', 'created_at')
+
+
+@admin.register(Video)
+class VideoAdmin(admin.ModelAdmin):
+    list_display = ('title', 'album', 'created_at', 'is_published')
+    list_filter = ('is_published', 'created_at')
+    search_fields = ('title', 'description', 'album__title')
 
 
 @admin.register(Publication)
@@ -17,7 +41,6 @@ class PublicationAdmin(admin.ModelAdmin):
     )
 
     search_fields = ('title',)
-
     list_filter = (
         'is_published',
         'created_at'
