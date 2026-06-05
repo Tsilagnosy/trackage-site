@@ -30,17 +30,45 @@ def home(request):
         is_published=True
     ).order_by('-created_at')[:6]
 
+    visitor_id = request.COOKIES.get('visitor_id')
+    if not visitor_id:
+        visitor_id = str(uuid.uuid4())
+
+    publication_ids = [pub.id for pub in publications]
+    reaction_counts = PublicationReaction.objects.filter(
+        publication_id__in=publication_ids
+    ).values('publication_id', 'kind').annotate(count=Count('id'))
+
+    reaction_summary_by_publication = {}
+    for item in reaction_counts:
+        pub_id = item['publication_id']
+        kind = item['kind']
+        reaction_summary_by_publication.setdefault(pub_id, {})[kind] = item['count']
+
+    user_reactions = PublicationReaction.objects.filter(
+        publication_id__in=publication_ids,
+        visitor_id=visitor_id
+    )
+    user_reaction_by_publication = {r.publication_id: r.kind for r in user_reactions}
+
     context = {
         'publications': publications,
         'albums': albums,
         'videos': videos,
+        'reaction_summary_by_publication': reaction_summary_by_publication,
+        'user_reaction_by_publication': user_reaction_by_publication,
+        'reaction_choices': PublicationReaction.REACTION_CHOICES,
     }
 
-    return render(
+    response = render(
         request,
         'portfolio/home.html',
         context
     )
+    if not request.COOKIES.get('visitor_id'):
+        response.set_cookie('visitor_id', visitor_id, max_age=60*60*24*365)
+
+    return response
 
 
 def publication_detail(request, publication_id):
@@ -109,14 +137,18 @@ def react_publication(request, publication_id):
         lookup_kwargs['ip_address'] = ip_address
 
     existing = PublicationReaction.objects.filter(**lookup_kwargs).first()
+    active = True
     if existing:
         if existing.kind == kind:
             existing.delete()
+            active = False
         else:
             existing.kind = kind
             existing.save(update_fields=['kind'])
+            active = True
     else:
         PublicationReaction.objects.create(publication=publication, ip_address=ip_address, visitor_id=visitor_id, kind=kind)
+        active = True
 
     # return updated counts
     reaction_counts = publication.reactions.values('kind').annotate(count=Count('id'))
@@ -130,7 +162,7 @@ def react_publication(request, publication_id):
     else:
         stars = 2
 
-    return JsonResponse({'summary': summary, 'total': total, 'stars': stars})
+    return JsonResponse({'summary': summary, 'total': total, 'stars': stars, 'active': active, 'selected_kind': kind})
 
 
 def album_list(request):
