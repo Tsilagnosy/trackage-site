@@ -5,9 +5,21 @@
 <section class="max-w-7xl mx-auto py-8">
 
     <!-- Header -->
-    <div class="mb-12">
-        <h1 class="text-5xl md:text-6xl font-bold mb-4">Dashboard</h1>
-        <p class="text-gray-400 text-lg">Suivi des analyses et statistiques de votre portfolio</p>
+    <div class="mb-8 flex items-center justify-between gap-6">
+        <div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-1">Dashboard</h1>
+            <p class="text-gray-400 text-sm">Suivi des analyses et statistiques de votre portfolio</p>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="hidden md:flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2">
+                <img src="{% static 'images/profile.jpeg' %}" class="w-8 h-8 rounded-full object-cover" alt="avatar">
+                <div class="text-sm">
+                    <div class="text-white font-medium">Julien Tsila</div>
+                    <div class="text-gray-400">Admin</div>
+                </div>
+            </div>
+            <a href="/admin/" class="px-4 py-2 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-black font-semibold">Accéder à l'admin</a>
+        </div>
     </div>
 
     <!-- Key Metrics Grid -->
