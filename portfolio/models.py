@@ -18,6 +18,19 @@ class Publication(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def reaction_count(self):
+        return self.reactions.count()
+
+    @property
+    def rating_stars(self):
+        count = self.reaction_count
+        if count > 50:
+            return 4
+        if 30 <= count <= 50:
+            return 3
+        return 2
+
 
 class Album(models.Model):
     title = models.CharField(max_length=200)
@@ -82,6 +95,31 @@ class VisitorAnalytics(models.Model):
 
     def __str__(self):
         return f"{self.ip_address} - {self.path_visited}"
+
+
+class PublicationReaction(models.Model):
+    publication = models.ForeignKey(
+        'Publication',
+        related_name='reactions',
+        on_delete=models.CASCADE
+    )
+    REACTION_CHOICES = [
+        ('like', 'Like'),
+        ('love', 'Love'),
+        ('wow', 'Wow'),
+        ('sad', 'Sad'),
+        ('angry', 'Angry'),
+    ]
+
+    kind = models.CharField(max_length=10, choices=REACTION_CHOICES, default='like')
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Reaction ({self.kind}) pour {self.publication.title} - {self.created_at:%Y-%m-%d %H:%M}"
 
 
 class ContactMessage(models.Model):

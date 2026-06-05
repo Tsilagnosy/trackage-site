@@ -1,0 +1,50 @@
+{% extends "admin/base_site.html" %}
+
+{% block title %}Statistiques des publications{% endblock %}
+
+{% block content %}
+<div class="content">
+    <div class="module">
+        <h1>Statistiques des publications</h1>
+        <div class="dashboard-stats">
+            <p><strong>Total publications :</strong> {{ total_publications }}</p>
+            <p><strong>Total réactions :</strong> {{ total_reactions }}</p>
+        </div>
+    </div>
+
+    <div class="module">
+        <h2>Répartition des étoiles</h2>
+        <ul>
+            {% for label, count in rating_summary.items %}
+                <li><strong>{{ label }} :</strong> {{ count }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="module">
+        <h2>Top 10 publications par réactions</h2>
+        <table class="adminlist">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Réactions</th>
+                    <th>Étoiles</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for publication in publications %}
+                <tr>
+                    <td>{{ publication.title }}</td>
+                    <td>{{ publication.reaction_count }}</td>
+                    <td>{% if publication.reaction_count > 50 %}4{% elif publication.reaction_count >= 30 %}3{% else %}2{% endif %}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">Aucune réaction enregistrée.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

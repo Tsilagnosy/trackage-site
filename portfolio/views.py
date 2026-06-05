@@ -6,10 +6,13 @@ from django.contrib.auth.decorators import login_required
 from .models import (
     Album,
     Publication,
+    PublicationReaction,
     Video,
     ContactMessage,
     VisitorAnalytics,
 )
+
+from django.http import JsonResponse
 
 
 def home(request):
@@ -45,13 +48,23 @@ def publication_detail(request, publication_id):
         Publication,
         id=publication_id
     )
-
+    # normal GET view: increment views and show reactions summary
     publication.views += 1
-
     publication.save()
 
+    # reaction counts by kind
+    reaction_counts = publication.reactions.values('kind').annotate(count=Count('id'))
+    reaction_summary = {r['kind']: r['count'] for r in reaction_counts}
+
+    # current visitor reaction (by IP)
+    ip_address = request.META.get('REMOTE_ADDR')
+    user_reaction = publication.reactions.filter(ip_address=ip_address).first()
+    user_kind = user_reaction.kind if user_reaction else None
+
     context = {
-        'publication': publication
+        'publication': publication,
+        'reaction_summary': reaction_summary,
+        'user_reaction_kind': user_kind,
     }
 
     return render(
@@ -59,6 +72,42 @@ def publication_detail(request, publication_id):
         'portfolio/publication_detail.html',
         context
     )
+
+
+def react_publication(request, publication_id):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+    publication = get_object_or_404(Publication, id=publication_id)
+    kind = request.POST.get('kind') or request.JSON.get('kind') if hasattr(request, 'JSON') else request.POST.get('kind')
+    if kind not in dict(PublicationReaction.REACTION_CHOICES):
+        return JsonResponse({'error': 'Invalid reaction kind'}, status=400)
+
+    ip_address = request.META.get('REMOTE_ADDR')
+    existing = PublicationReaction.objects.filter(publication=publication, ip_address=ip_address).first()
+    if existing:
+        if existing.kind == kind:
+            # toggle off
+            existing.delete()
+        else:
+            existing.kind = kind
+            existing.save(update_fields=['kind'])
+    else:
+        PublicationReaction.objects.create(publication=publication, ip_address=ip_address, kind=kind)
+
+    # return updated counts
+    reaction_counts = publication.reactions.values('kind').annotate(count=Count('id'))
+    summary = {r['kind']: r['count'] for r in reaction_counts}
+    total = sum(summary.values())
+    # compute stars based on total
+    if total > 50:
+        stars = 4
+    elif 30 <= total <= 50:
+        stars = 3
+    else:
+        stars = 2
+
+    return JsonResponse({'summary': summary, 'total': total, 'stars': stars})
 
 
 def album_list(request):

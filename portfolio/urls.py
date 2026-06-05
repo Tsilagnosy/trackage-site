@@ -9,6 +9,7 @@ from .views import (
     dashboard,
     home,
     publication_detail,
+    react_publication,
 )
 
 urlpatterns = [
@@ -18,6 +19,7 @@ urlpatterns = [
     path('albums/<slug:slug>/', album_detail, name='album_detail'),
     path('contact/', contact, name='contact'),
     path('publication/<int:publication_id>/', publication_detail, name='publication_detail'),
+    path('publication/<int:publication_id>/react/', react_publication, name='react_publication'),
     path('dashboard/', dashboard, name='dashboard'),
     path('cv/', cv, name='cv'),
 ]
