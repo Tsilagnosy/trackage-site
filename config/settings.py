@@ -20,7 +20,8 @@ DEBUG = os.getenv('DEBUG', 'False') == 'False'
 ALLOWED_HOSTS = [
     ".onrender.com",
     "localhost",
-    "127.0.1",
+    "127.0.0.1",
+    "0.0.0.0",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -144,6 +145,7 @@ CLOUDINARY_STORAGE = {
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = [
     "127.0.0.1",
